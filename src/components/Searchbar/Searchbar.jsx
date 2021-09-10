@@ -3,7 +3,7 @@ import React from 'react';
 const Searchbar = () => (
   <header className="Searchbar">
     <form className="SearchForm">
-      <button type="submit" className="SearchForm-button">
+      <button type="submit" className="SearchForm-button" aria-label="Search">
         <span className="SearchForm-button-label">Search</span>
       </button>
 
