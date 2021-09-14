@@ -7,8 +7,8 @@ import Spinner from '../Loader';
 
 class ImageGallery extends React.Component {
   state = {
-    image: '',
-    gallery: null,
+    totalHits: 0,
+    gallery: [],
     page: 1,
     loading: false,
     status: 'idle',
@@ -19,15 +19,36 @@ class ImageGallery extends React.Component {
     const prevSearch = prevProps.search;
     const currentPage = this.state.page;
     const prevPage = prevState.page;
+    const prevGallery = this.state.gallery;
 
-    if (currentSearch !== prevSearch || currentPage !== prevPage) {
+    if (currentSearch !== prevSearch) {
+      this.setState({ status: 'pending', gallery: [], page: 1 });
+
+      apiFetch
+        .fetchApi(currentSearch, currentPage)
+        .then(gallery => {
+          console.log(`search`, gallery.hits);
+          this.setState({
+            gallery: gallery.hits,
+            status: 'resolved',
+            totalHits: gallery.hits.length,
+          });
+        })
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+    if (currentPage !== prevPage) {
       this.setState({ status: 'pending' });
 
       apiFetch
         .fetchApi(currentSearch, currentPage)
-        .then(gallery =>
-          this.setState({ gallery: gallery.hits, status: 'resolved' }),
-        )
+        .then(gallery => {
+          console.log([gallery.totalHits, `page`]);
+          this.setState({
+            gallery: [...prevGallery, ...gallery.hits],
+            status: 'resolved',
+            totalHits: gallery.hits.length,
+          });
+        })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
@@ -36,13 +57,14 @@ class ImageGallery extends React.Component {
     this.setState({
       page: this.state.page + 1,
     });
-    console.log(this.state.page, `aper`);
+    console.log(this.state.page, `page`);
+    console.log(this.state.totalHits, `total`);
   };
   toggleModal = largeImage => {
     this.props.onClick(largeImage);
   };
   render() {
-    const { gallery, status } = this.state;
+    const { gallery, status, totalHits } = this.state;
     // return (
     if (status === 'idle') {
       return <div>Start your search</div>;
@@ -66,7 +88,7 @@ class ImageGallery extends React.Component {
               />
             ))}
           </ul>
-          <Button pages={this.handleButton} />
+          {totalHits === 12 && <Button pages={this.handleButton} />}
         </>
       );
     }
