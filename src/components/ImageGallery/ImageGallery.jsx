@@ -2,6 +2,7 @@ import React from 'react';
 import Loader from 'react-loader-spinner';
 import Button from '../Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem';
+import apiFetch from '../../services/fetch-api';
 
 class ImageGallery extends React.Component {
   state = {
@@ -9,24 +10,20 @@ class ImageGallery extends React.Component {
     gallery: null,
     page: 1,
     loading: false,
+    status: 'idle',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { page } = this.state;
-    const API = '22611129-58a3168a9d70d9c0808a9c973';
-
     const currentSearch = this.props.search;
     const prevSearch = prevProps.search;
     const currentPage = this.state.page;
-    console.log(currentPage, `okey`);
     const prevPage = prevState.page;
-    if (currentSearch !== prevSearch || currentPage !== prevPage) {
-      this.setState({ loading: true, gallery: null });
 
-      fetch(
-        `https://pixabay.com/api/?key=${API}&q=${currentSearch}&image_type=photo&orientation=horizontal&per_page=12&page=${page}`,
-      )
-        .then(res => res.json())
+    if (currentSearch !== prevSearch || currentPage !== prevPage) {
+      this.setState({ loading: true });
+
+      apiFetch
+        .fetchApi(currentSearch, currentPage)
         .then(gallery => this.setState({ gallery: gallery.hits }))
         .finally(() => {
           this.setState({ loading: false });
@@ -34,9 +31,9 @@ class ImageGallery extends React.Component {
     }
   }
 
-  handleButton = page => {
+  handleButton = prevState => {
     this.setState({
-      page,
+      page: this.state.page + 1,
     });
     console.log(this.state.page, `aper`);
   };
@@ -44,8 +41,23 @@ class ImageGallery extends React.Component {
     this.props.onClick(largeImage);
   };
   render() {
-    const { gallery, loading } = this.state;
+    const { gallery, loading, status } = this.state;
     return (
+      //     if ( status === 'pending') {
+      //       return  <Loader type="ThreeDots" color="#00BFFF" height={80} width={80} />;
+      //     }
+      // if (status === 'reject') {
+      //   return  gallery.map(({ id, webformatURL, largeImageURL }) => (
+      //       <ul className="ImageGallery">
+      //           <ImageGalleryItem
+      //             key={id}
+      //             webformatURL={webformatURL}
+      //             largeImage={largeImageURL}
+      //             onClick={this.toggleModal}
+      //             />
+      //              </ul>))
+
+      // }
       <>
         <ul className="ImageGallery">
           {gallery &&
