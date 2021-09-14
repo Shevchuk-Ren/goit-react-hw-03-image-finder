@@ -6,8 +6,10 @@ function fetchApi(currentSearch, currentPage) {
     `https://pixabay.com/api/?key=${API}&q=${currentSearch}&image_type=photo&orientation=horizontal&per_page=12&page=${currentPage}`,
   ).then(res => {
     if (res.ok) {
+      console.log(res.ok);
       return res.json();
     }
+    console.log(res.ok);
     return Promise.reject(new Error(`No result with name ${currentSearch}`));
   });
 }

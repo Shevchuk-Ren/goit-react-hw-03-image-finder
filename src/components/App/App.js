@@ -46,7 +46,7 @@ class App extends React.Component {
         {showModal && (
           <Modal onClose={this.toggleModal}>
             <img src={photo} alt="" />
-            <button type="button" onClick={this.toggleModal}></button>
+            {/* <button type="button" onClick={this.toggleModal}></button> */}
           </Modal>
         )}
       </div>

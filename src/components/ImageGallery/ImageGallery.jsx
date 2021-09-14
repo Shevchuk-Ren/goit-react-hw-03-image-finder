@@ -1,8 +1,9 @@
 import React from 'react';
-import Loader from 'react-loader-spinner';
+// import Loader from 'react-loader-spinner';
 import Button from '../Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem';
 import apiFetch from '../../services/fetch-api';
+import Spinner from '../Loader';
 
 class ImageGallery extends React.Component {
   state = {
@@ -20,14 +21,14 @@ class ImageGallery extends React.Component {
     const prevPage = prevState.page;
 
     if (currentSearch !== prevSearch || currentPage !== prevPage) {
-      this.setState({ loading: true });
+      this.setState({ status: 'pending' });
 
       apiFetch
         .fetchApi(currentSearch, currentPage)
-        .then(gallery => this.setState({ gallery: gallery.hits }))
-        .finally(() => {
-          this.setState({ loading: false });
-        });
+        .then(gallery =>
+          this.setState({ gallery: gallery.hits, status: 'resolved' }),
+        )
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
 
@@ -41,41 +42,52 @@ class ImageGallery extends React.Component {
     this.props.onClick(largeImage);
   };
   render() {
-    const { gallery, loading, status } = this.state;
-    return (
-      //     if ( status === 'pending') {
-      //       return  <Loader type="ThreeDots" color="#00BFFF" height={80} width={80} />;
-      //     }
-      // if (status === 'reject') {
-      //   return  gallery.map(({ id, webformatURL, largeImageURL }) => (
-      //       <ul className="ImageGallery">
-      //           <ImageGalleryItem
-      //             key={id}
-      //             webformatURL={webformatURL}
-      //             largeImage={largeImageURL}
-      //             onClick={this.toggleModal}
-      //             />
-      //              </ul>))
-
-      // }
-      <>
-        <ul className="ImageGallery">
-          {gallery &&
-            gallery.map(({ id, webformatURL, largeImageURL }) => (
+    const { gallery, status } = this.state;
+    // return (
+    if (status === 'idle') {
+      return <div>Start your search</div>;
+    }
+    if (status === 'pending') {
+      return (
+        <Spinner type="ThreeDots" color="#00BFFF" height={80} width={80} />
+      );
+    }
+    if (status === 'resolved') {
+      return (
+        <>
+          <ul className="ImageGallery">
+            {gallery.map(({ id, webformatURL, largeImageURL, tags }) => (
               <ImageGalleryItem
                 key={id}
                 webformatURL={webformatURL}
                 largeImage={largeImageURL}
                 onClick={this.toggleModal}
+                alt={tags}
               />
             ))}
-          {loading && (
-            <Loader type="ThreeDots" color="#00BFFF" height={80} width={80} />
-          )}
-        </ul>
-        {gallery && <Button pages={this.handleButton} />}
-      </>
-    );
+          </ul>
+          <Button pages={this.handleButton} />
+        </>
+      );
+    }
+    //   <>
+    //     <ul className="ImageGallery">
+    //       {gallery &&
+    //         gallery.map(({ id, webformatURL, largeImageURL }) => (
+    //           <ImageGalleryItem
+    //             key={id}
+    //             webformatURL={webformatURL}
+    //             largeImage={largeImageURL}
+    //             onClick={this.toggleModal}
+    //           />
+    //         ))}
+    //       {loading && ( <Spinner />
+
+    //       )}
+    //     </ul>
+    //     {gallery && <Button pages={this.handleButton} />}
+    //   </>
+    // );
   }
 }
 
