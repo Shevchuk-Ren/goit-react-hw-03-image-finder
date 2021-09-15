@@ -3,7 +3,7 @@ import React from 'react';
 class Searchbar extends React.Component {
   state = {
     showModal: false,
-    search: 'dog',
+    search: '',
     photo: null,
     page: 1,
     loading: false,
@@ -17,11 +17,14 @@ class Searchbar extends React.Component {
   };
   handleSubmit = evt => {
     evt.preventDefault();
+
     if (this.state.search.trim() === '') {
       alert('Введите запрос');
       return;
     }
+
     this.props.onSubmit(this.state.search);
+    //  this.reset();
   };
   render() {
     return (

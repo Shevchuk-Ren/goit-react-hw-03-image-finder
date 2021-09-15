@@ -14,6 +14,11 @@ class ImageGallery extends React.Component {
     status: 'idle',
   };
 
+  //        window.scrollTo({
+  //   top: document.documentElement.scrollHeight,
+  //   behavior: 'smooth',
+  // });
+
   componentDidUpdate(prevProps, prevState) {
     const currentSearch = this.props.search;
     const prevSearch = prevProps.search;
@@ -28,6 +33,13 @@ class ImageGallery extends React.Component {
         .fetchApi(currentSearch, currentPage)
         .then(gallery => {
           console.log(`search`, gallery.hits);
+          if (gallery.hits.length === 0) {
+            alert('No results');
+            this.setState({
+              status: 'rejected',
+            });
+            return;
+          }
           this.setState({
             gallery: gallery.hits,
             status: 'resolved',
@@ -53,19 +65,29 @@ class ImageGallery extends React.Component {
     }
   }
 
-  handleButton = prevState => {
+  handleButton = () => {
     this.setState({
       page: this.state.page + 1,
     });
     console.log(this.state.page, `page`);
     console.log(this.state.totalHits, `total`);
+
+    //        window.scrollTo({
+    //   top: document.documentElement.scrollHeight,
+    //   behavior: 'smooth',
+    // });
+    //     window.scrollTo({
+    //     top: document.documentElement.scrollHeight,
+    //     behavior: "smooth"
+    // });
+    // window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
   };
   toggleModal = largeImage => {
     this.props.onClick(largeImage);
   };
   render() {
     const { gallery, status, totalHits } = this.state;
-    // return (
+
     if (status === 'idle') {
       return <div>Start your search</div>;
     }
@@ -92,24 +114,9 @@ class ImageGallery extends React.Component {
         </>
       );
     }
-    //   <>
-    //     <ul className="ImageGallery">
-    //       {gallery &&
-    //         gallery.map(({ id, webformatURL, largeImageURL }) => (
-    //           <ImageGalleryItem
-    //             key={id}
-    //             webformatURL={webformatURL}
-    //             largeImage={largeImageURL}
-    //             onClick={this.toggleModal}
-    //           />
-    //         ))}
-    //       {loading && ( <Spinner />
-
-    //       )}
-    //     </ul>
-    //     {gallery && <Button pages={this.handleButton} />}
-    //   </>
-    // );
+    if (status === 'rejected') {
+      return <div>No results</div>;
+    }
   }
 }
 
