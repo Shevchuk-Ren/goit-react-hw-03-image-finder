@@ -1,12 +1,10 @@
 import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Searchbar extends React.Component {
   state = {
-    showModal: false,
     search: '',
-    photo: null,
-    page: 1,
-    loading: false,
   };
 
   handleSearchChange = evt => {
@@ -19,11 +17,24 @@ class Searchbar extends React.Component {
     evt.preventDefault();
 
     if (this.state.search.trim() === '') {
-      alert('Введите запрос');
+      // alert('Введите запрос');
+      const notifyInfo = () =>
+        toast.info('Please, enter search criteria', {
+          icon: false,
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      notifyInfo();
       return;
     }
 
     this.props.onSubmit(this.state.search);
+    this.setState({ search: '' });
     //  this.reset();
   };
   render() {

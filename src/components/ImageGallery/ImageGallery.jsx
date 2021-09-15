@@ -4,7 +4,8 @@ import Button from '../Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem';
 import apiFetch from '../../services/fetch-api';
 import Spinner from '../Loader';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class ImageGallery extends React.Component {
   state = {
     totalHits: 0,
@@ -13,11 +14,6 @@ class ImageGallery extends React.Component {
     loading: false,
     status: 'idle',
   };
-
-  //        window.scrollTo({
-  //   top: document.documentElement.scrollHeight,
-  //   behavior: 'smooth',
-  // });
 
   componentDidUpdate(prevProps, prevState) {
     const currentSearch = this.props.search;
@@ -34,10 +30,23 @@ class ImageGallery extends React.Component {
         .then(gallery => {
           console.log(`search`, gallery.hits);
           if (gallery.hits.length === 0) {
-            alert('No results');
+            const notify = () =>
+              toast.error(`No result with name ${currentSearch}`, {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+              });
+
+            console.log([gallery.totalHits, `page`]);
             this.setState({
               status: 'rejected',
             });
+            notify();
             return;
           }
           this.setState({
@@ -71,16 +80,6 @@ class ImageGallery extends React.Component {
     });
     console.log(this.state.page, `page`);
     console.log(this.state.totalHits, `total`);
-
-    //        window.scrollTo({
-    //   top: document.documentElement.scrollHeight,
-    //   behavior: 'smooth',
-    // });
-    //     window.scrollTo({
-    //     top: document.documentElement.scrollHeight,
-    //     behavior: "smooth"
-    // });
-    // window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
   };
   toggleModal = largeImage => {
     this.props.onClick(largeImage);
@@ -115,7 +114,7 @@ class ImageGallery extends React.Component {
       );
     }
     if (status === 'rejected') {
-      return <div>No results</div>;
+      return <div></div>;
     }
   }
 }
