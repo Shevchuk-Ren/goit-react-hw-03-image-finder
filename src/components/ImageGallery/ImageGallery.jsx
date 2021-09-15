@@ -6,6 +6,7 @@ import apiFetch from '../../services/fetch-api';
 import Spinner from '../Loader';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { v4 as uuidv4 } from 'uuid';
 import { List } from './ImageGallery.styled';
 import { Wrapper } from '../Loader/Loader.styled';
 
@@ -103,9 +104,9 @@ class ImageGallery extends React.Component {
       return (
         <Wrapper>
           <List className="ImageGallery">
-            {gallery.map(({ id, webformatURL, largeImageURL, tags }) => (
+            {gallery.map(({ webformatURL, largeImageURL, tags }) => (
               <ImageGalleryItem
-                key={id}
+                key={uuidv4()}
                 webformatURL={webformatURL}
                 largeImage={largeImageURL}
                 onClick={this.toggleModal}

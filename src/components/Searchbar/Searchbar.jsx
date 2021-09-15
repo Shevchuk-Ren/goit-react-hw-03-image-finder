@@ -60,7 +60,7 @@ class Searchbar extends React.Component {
             value={this.state.search}
             autocomplete="off"
             onChange={this.handleSearchChange}
-            autofocus
+            autoFocus
             placeholder="Search images and photos"
           />
         </SearchForm>
