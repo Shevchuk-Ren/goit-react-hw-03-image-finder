@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Item, ItemImage } from './ImageGalleryItem.styled';
 
 const ImageGalleryItem = ({ webformatURL, largeImage, onClick, alt }) => (
-  <li className="ImageGalleryItem" onClick={() => onClick(largeImage)}>
-    <img src={webformatURL} alt={alt} className="ImageGalleryItem-image" />
-  </li>
+  <Item onClick={() => onClick(largeImage)}>
+    <ItemImage src={webformatURL} alt={alt} />
+  </Item>
 );
 
 ImageGalleryItem.propTypes = {

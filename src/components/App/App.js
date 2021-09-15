@@ -4,6 +4,7 @@ import Searchbar from '../Searchbar';
 import ImageGallery from '../ImageGallery';
 import Modal from '../Modal/Modal';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import { Container } from './App.styled';
 
 class App extends Component {
   static defaultProps = {
@@ -36,7 +37,7 @@ class App extends Component {
   render() {
     const { showModal, search, photo } = this.state;
     return (
-      <div>
+      <Container>
         <Searchbar onSubmit={this.handleFormSubmit}></Searchbar>
         <ImageGallery search={search} onClick={this.toggleModal}></ImageGallery>
         {showModal && (
@@ -56,7 +57,7 @@ class App extends Component {
           pauseOnHover
           icon={false}
         />
-      </div>
+      </Container>
     );
   }
 }

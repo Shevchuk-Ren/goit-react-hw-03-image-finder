@@ -6,6 +6,8 @@ import apiFetch from '../../services/fetch-api';
 import Spinner from '../Loader';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { List } from './ImageGallery.styled';
+import { Wrapper } from '../Loader/Loader.styled';
 
 class ImageGallery extends React.Component {
   static defaultProps = {
@@ -90,7 +92,7 @@ class ImageGallery extends React.Component {
     const { gallery, status, totalHits } = this.state;
 
     if (status === 'idle') {
-      return <div>Start your search</div>;
+      return <div></div>;
     }
     if (status === 'pending') {
       return (
@@ -99,8 +101,8 @@ class ImageGallery extends React.Component {
     }
     if (status === 'resolved') {
       return (
-        <>
-          <ul className="ImageGallery">
+        <Wrapper>
+          <List className="ImageGallery">
             {gallery.map(({ id, webformatURL, largeImageURL, tags }) => (
               <ImageGalleryItem
                 key={id}
@@ -110,9 +112,9 @@ class ImageGallery extends React.Component {
                 alt={tags}
               />
             ))}
-          </ul>
+          </List>
           {totalHits === 12 && <Button pages={this.handleButton} />}
-        </>
+        </Wrapper>
       );
     }
     if (status === 'rejected') {

@@ -2,6 +2,13 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
+import {
+  Header,
+  SearchForm,
+  SearchFormButton,
+  SearchFormLabel,
+  Input,
+} from './Searchbar.styled';
 
 class Searchbar extends React.Component {
   static defaultProps = {
@@ -32,25 +39,22 @@ class Searchbar extends React.Component {
           progress: undefined,
         });
       notifyInfo();
+      this.setState({ search: '' });
       return;
     }
 
     this.props.onSubmit(this.state.search);
-    this.setState({ search: ' ' });
+    this.setState({ search: '' });
   };
   render() {
     return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button
-            type="submit"
-            className="SearchForm-button"
-            aria-label="Search"
-          >
-            <span className="SearchForm-button-label">Search</span>
-          </button>
+      <Header>
+        <SearchForm onSubmit={this.handleSubmit}>
+          <SearchFormButton type="submit" aria-label="Search">
+            <SearchFormLabel>Search</SearchFormLabel>
+          </SearchFormButton>
 
-          <input
+          <Input
             className="SearchForm-input"
             type="text"
             value={this.state.search}
@@ -59,8 +63,8 @@ class Searchbar extends React.Component {
             autofocus
             placeholder="Search images and photos"
           />
-        </form>
-      </header>
+        </SearchForm>
+      </Header>
     );
   }
 }
