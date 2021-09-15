@@ -6,18 +6,23 @@ import Modal from '../Modal/Modal';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 class App extends Component {
-  state = {
+  static defaultProps = {
     showModal: false,
     search: '',
     photo: null,
   };
 
+  state = {
+    showModal: this.props.showModal,
+    search: this.props.search,
+    photo: this.props.photo,
+  };
+
   toggleModal = photo => {
-    console.log('app', photo);
     this.setState({
       photo,
     });
-    console.log('app', this.state.photo);
+
     this.setState(({ showModal }) => ({
       showModal: !showModal,
     }));

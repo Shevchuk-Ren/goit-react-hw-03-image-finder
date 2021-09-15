@@ -1,18 +1,24 @@
 import React from 'react';
-// import Loader from 'react-loader-spinner';
+import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 import ImageGalleryItem from '../ImageGalleryItem';
 import apiFetch from '../../services/fetch-api';
 import Spinner from '../Loader';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 class ImageGallery extends React.Component {
-  state = {
+  static defaultProps = {
     totalHits: 0,
     gallery: [],
     page: 1,
-    loading: false,
     status: 'idle',
+  };
+  state = {
+    totalHits: this.props.totalHits,
+    gallery: this.props.gallery,
+    page: this.props.page,
+    status: this.props.status,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -28,12 +34,10 @@ class ImageGallery extends React.Component {
       apiFetch
         .fetchApi(currentSearch, currentPage)
         .then(gallery => {
-          console.log(`search`, gallery.hits);
           if (gallery.hits.length === 0) {
             const notify = () =>
               toast.error(`No result with name ${currentSearch}`, {
                 position: 'top-center',
-                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -42,7 +46,6 @@ class ImageGallery extends React.Component {
                 theme: 'dark',
               });
 
-            console.log([gallery.totalHits, `page`]);
             this.setState({
               status: 'rejected',
             });
@@ -63,7 +66,6 @@ class ImageGallery extends React.Component {
       apiFetch
         .fetchApi(currentSearch, currentPage)
         .then(gallery => {
-          console.log([gallery.totalHits, `page`]);
           this.setState({
             gallery: [...prevGallery, ...gallery.hits],
             status: 'resolved',
@@ -78,12 +80,12 @@ class ImageGallery extends React.Component {
     this.setState({
       page: this.state.page + 1,
     });
-    console.log(this.state.page, `page`);
-    console.log(this.state.totalHits, `total`);
   };
+
   toggleModal = largeImage => {
     this.props.onClick(largeImage);
   };
+
   render() {
     const { gallery, status, totalHits } = this.state;
 
@@ -119,4 +121,7 @@ class ImageGallery extends React.Component {
   }
 }
 
+ImageGallery.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 export default ImageGallery;

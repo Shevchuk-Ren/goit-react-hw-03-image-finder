@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { animateScroll as scroll } from 'react-scroll';
 
 class Button extends React.Component {
@@ -10,7 +11,7 @@ class Button extends React.Component {
   render() {
     return (
       <button type="button" onClick={this.scroll} className="Button">
-        Load More{' '}
+        Load More
       </button>
     );
   }

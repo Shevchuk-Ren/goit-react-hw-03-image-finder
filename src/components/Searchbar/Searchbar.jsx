@@ -1,28 +1,30 @@
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PropTypes from 'prop-types';
 
 class Searchbar extends React.Component {
-  state = {
+  static defaultProps = {
     search: '',
+  };
+
+  state = {
+    search: this.props.search,
   };
 
   handleSearchChange = evt => {
     this.setState({
       search: evt.currentTarget.value.toLowerCase(),
     });
-    console.log(this.state.search);
   };
   handleSubmit = evt => {
     evt.preventDefault();
 
     if (this.state.search.trim() === '') {
-      // alert('Введите запрос');
       const notifyInfo = () =>
         toast.info('Please, enter search criteria', {
           icon: false,
           position: 'top-center',
-          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -34,8 +36,7 @@ class Searchbar extends React.Component {
     }
 
     this.props.onSubmit(this.state.search);
-    this.setState({ search: '' });
-    //  this.reset();
+    this.setState({ search: ' ' });
   };
   render() {
     return (
@@ -52,6 +53,7 @@ class Searchbar extends React.Component {
           <input
             className="SearchForm-input"
             type="text"
+            value={this.state.search}
             autocomplete="off"
             onChange={this.handleSearchChange}
             autofocus
@@ -62,5 +64,9 @@ class Searchbar extends React.Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func,
+};
 
 export default Searchbar;
