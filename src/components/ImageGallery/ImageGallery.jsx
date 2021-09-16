@@ -22,10 +22,12 @@ class ImageGallery extends React.Component {
     gallery: this.props.gallery,
     page: this.props.page,
     status: this.props.status,
+    spinner: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
     const currentSearch = this.props.search;
+    console.log(currentSearch, 'search');
     const prevSearch = prevProps.search;
     const currentPage = this.state.page;
     const prevPage = prevState.page;
@@ -33,6 +35,7 @@ class ImageGallery extends React.Component {
 
     if (currentSearch !== prevSearch) {
       this.setState({ status: 'pending', gallery: [], page: 1 });
+      console.log('Here i am');
 
       apiFetch
         .fetchApi(currentSearch, currentPage)
@@ -64,14 +67,15 @@ class ImageGallery extends React.Component {
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
     if (currentPage !== prevPage) {
-      this.setState({ status: 'pending' });
+      this.setState({ spinner: true });
 
       apiFetch
         .fetchApi(currentSearch, currentPage)
         .then(gallery => {
           this.setState({
-            gallery: [...prevGallery, ...gallery.hits],
             status: 'resolved',
+            gallery: [...prevGallery, ...gallery.hits],
+            spinner: false,
             totalHits: gallery.hits.length,
           });
         })
@@ -90,7 +94,7 @@ class ImageGallery extends React.Component {
   };
 
   render() {
-    const { gallery, status, totalHits } = this.state;
+    const { gallery, status, totalHits, spinner } = this.state;
 
     if (status === 'idle') {
       return <div></div>;
@@ -114,6 +118,9 @@ class ImageGallery extends React.Component {
               />
             ))}
           </List>
+          {spinner && (
+            <Spinner type="ThreeDots" color="#00BFFF" height={80} width={80} />
+          )}
           {totalHits === 12 && <Button pages={this.handleButton} />}
         </Wrapper>
       );
