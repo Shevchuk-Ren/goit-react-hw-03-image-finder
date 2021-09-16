@@ -73,9 +73,8 @@ class ImageGallery extends React.Component {
         .fetchApi(currentSearch, currentPage)
         .then(gallery => {
           this.setState({
-            status: 'resolved',
-            gallery: [...prevGallery, ...gallery.hits],
             spinner: false,
+            gallery: [...prevGallery, ...gallery.hits],
             totalHits: gallery.hits.length,
           });
         })
